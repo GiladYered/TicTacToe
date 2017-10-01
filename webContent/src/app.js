@@ -3,20 +3,40 @@
  */
 var draw_data = ["X", "O"];
 
+var gameInProgress = true;
+
 $(document).ready(function () {
+
+    if (!gameInProgress) {
+        return;
+    }
+
     // Main click event handler
     $("td").click(function () {
-        updateContent($(this));
-        var resulttextstate = checkState($(this));
+        var currentTdClick = this;
+        updateContent($(currentTdClick));
+        var resulttextstate = checkState($(currentTdClick));
         console.log(resulttextstate);
+
+        /*reset all td contents*/
+        $("#resetButton").on("click", function () {
+            gameInProgress = true;
+            $("td").html("").css("background-color", "#ffffff");
+        });
     });
 
-    //Updates an individual cell content with an approporiate value
+
+//Updates an individual cell content with an approporiate value
     var lastused = null;
 
     function updateContent(cell) {
+
+        if (!gameInProgress) {
+            return;
+        }
+
         var value = cell.text();
-        if (value == "X" || value == "O") {
+        if (value === "X" || value === "O") {
             window.alert("This cell not empty")
 
         } else {
@@ -32,13 +52,18 @@ $(document).ready(function () {
 //Checks if victory has been achieved;
     function checkState(ValueNowEntered) {
 
+        if (!gameInProgress) {
+            return;
+        }
+
         //1.Get all textContent and insert to array variable
-        var TableStateStausArray = $('#TicTacToeTable td').toArray().map(function (el) {
+        var TableStateStausArray = $('#TicTacToeTable').find('td').toArray().map(function (el) {
             return el.textContent;
         });
 
         //2.Check if the player won
         var ValueOfNowEntered = ValueNowEntered.text();
+
         if ((ValueOfNowEntered == TableStateStausArray[0] && ValueOfNowEntered == TableStateStausArray[1] && ValueOfNowEntered == TableStateStausArray[2])
             ||
             (ValueOfNowEntered == TableStateStausArray[3] && ValueOfNowEntered == TableStateStausArray[4] && ValueOfNowEntered == TableStateStausArray[5])
@@ -55,8 +80,15 @@ $(document).ready(function () {
             ||
             (ValueOfNowEntered == TableStateStausArray[2] && ValueOfNowEntered == TableStateStausArray[4] && ValueOfNowEntered == TableStateStausArray[6])
         ) {
+
+            gameInProgress = false;
+
+            $("td").css("background-color", "#dddddd");
+
             setTimeout(function () {
-                window.alert('You Win')
+
+                window.alert('You Win');
+
             }, 150);
         }
 
@@ -71,7 +103,6 @@ $(document).ready(function () {
 
     }
 })
-;
 
 
 /*function map(callback){
