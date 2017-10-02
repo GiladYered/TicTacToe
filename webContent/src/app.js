@@ -88,6 +88,7 @@ $(document).ready(function () {
             setTimeout(function () {
 
                 window.alert('You Win');
+                window.alert('Game Over')
 
             }, 150);
         }
